@@ -6,6 +6,10 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddCors(p => p.AddPolicy("corsenabled", builder =>
+{
+    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
 string connectionString = builder.Configuration.GetConnectionString("MySqlTelevision");
 builder.Services.AddTransient<RepositoryPersonajes>();
 builder.Services.AddDbContext<DataContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
@@ -37,7 +41,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("corsenabled");
 app.UseAuthorization();
 
 app.MapControllers();
