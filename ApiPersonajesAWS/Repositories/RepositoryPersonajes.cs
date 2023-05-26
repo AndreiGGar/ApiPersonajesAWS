@@ -29,7 +29,7 @@ namespace ApiPersonajesAWS.Repositories
             return this.context.Personajes.Max(z => z.IdPersonaje) + 1;
         }
 
-        public async Task CreatePersonaje(string nombre, string imagen)
+        /*public async Task CreatePersonaje(string nombre, string imagen)
         {
             Personaje personaje = new Personaje();
             personaje.IdPersonaje = this.GetMaxIdPersonaje();
@@ -37,6 +37,45 @@ namespace ApiPersonajesAWS.Repositories
             personaje.Imagen = imagen;
             this.context.Personajes.Add(personaje);
             await this.context.SaveChangesAsync();
+        }*/
+
+        public async Task CreatePersonajeAsync(string nombre, string imagen)
+        {
+            var query = $"CALL SP_INSERT_PERSONAJE('{nombre}', '{imagen}')";
+            await this.context.Database.ExecuteSqlRawAsync(query);
+
+            Personaje personaje = new Personaje();
+            personaje.Nombre = nombre;
+            personaje.Imagen = imagen;
+            this.context.Personajes.Add(personaje);
+            await this.context.SaveChangesAsync();
+        }
+
+        public async Task UpdatePersonajeAsync(int id, string nombre, string imagen)
+        {
+            var query = $"CALL SP_UPDATE_PERSONAJE({id}, '{nombre}', '{imagen}')";
+            await this.context.Database.ExecuteSqlRawAsync(query);
+
+            Personaje personaje = await FindPersonajeAsync(id);
+            if (personaje != null)
+            {
+                personaje.Nombre = nombre;
+                personaje.Imagen = imagen;
+                await this.context.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeletePersonajeAsync(int id)
+        {
+            var query = $"CALL SP_DELETE_PERSONAJE({id})";
+            await this.context.Database.ExecuteSqlRawAsync(query);
+
+            Personaje personaje = await this.context.Personajes.FindAsync(id);
+            if (personaje != null)
+            {
+                this.context.Personajes.Remove(personaje);
+                await this.context.SaveChangesAsync();
+            }
         }
     }
 }

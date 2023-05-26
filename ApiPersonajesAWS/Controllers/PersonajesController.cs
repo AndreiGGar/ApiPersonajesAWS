@@ -29,10 +29,26 @@ namespace ApiPersonajesAWS.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreatePersonaje(Personaje personaje)
+        [Route("/create/{nombre}/{imagen}")]
+        public async Task<ActionResult> CreatePersonaje(string nombre, string imagen)
         {
-            await this.repo.CreatePersonaje(personaje.Nombre
-                , personaje.Imagen);
+            await this.repo.CreatePersonajeAsync(nombre, imagen);
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("/update/{id}/{nombre}/{imagen}")]
+        public async Task<ActionResult> UpdatePersonaje(Personaje personaje)
+        {
+            await this.repo.UpdatePersonajeAsync(personaje.IdPersonaje, personaje.Nombre, personaje.Imagen);
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("/delete/{id}")]
+        public async Task<ActionResult> DeletePersonaje(int id)
+        {
+            await this.repo.DeletePersonajeAsync(id);
             return Ok();
         }
     }
