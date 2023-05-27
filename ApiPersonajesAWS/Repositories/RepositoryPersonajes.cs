@@ -20,14 +20,13 @@ namespace ApiPersonajesAWS.Repositories
 
         public async Task<Personaje> FindPersonajeAsync(int id)
         {
-            return await
-                this.context.Personajes.FirstOrDefaultAsync(x => x.IdPersonaje == id);
+            return await this.context.Personajes.FirstOrDefaultAsync(x => x.IdPersonaje == id);
         }
 
-        private int GetMaxIdPersonaje()
+        /*private int GetMaxIdPersonaje()
         {
             return this.context.Personajes.Max(z => z.IdPersonaje) + 1;
-        }
+        }*/
 
         /*public async Task CreatePersonaje(string nombre, string imagen)
         {
@@ -59,6 +58,7 @@ namespace ApiPersonajesAWS.Repositories
             Personaje personaje = await FindPersonajeAsync(id);
             if (personaje != null)
             {
+                personaje.IdPersonaje = id;
                 personaje.Nombre = nombre;
                 personaje.Imagen = imagen;
                 await this.context.SaveChangesAsync();

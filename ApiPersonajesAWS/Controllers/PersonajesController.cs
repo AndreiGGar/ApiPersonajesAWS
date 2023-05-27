@@ -38,9 +38,9 @@ namespace ApiPersonajesAWS.Controllers
 
         [HttpPut]
         [Route("update/{id}/{nombre}/{imagen}")]
-        public async Task<ActionResult> UpdatePersonaje(Personaje personaje)
+        public async Task<ActionResult> UpdatePersonaje(int id, string nombre, string imagen)
         {
-            await this.repo.UpdatePersonajeAsync(personaje.IdPersonaje, personaje.Nombre, personaje.Imagen);
+            await this.repo.UpdatePersonajeAsync(id, nombre, imagen);
             return Ok();
         }
 
